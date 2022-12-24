@@ -1,13 +1,46 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import icon from "../../assets/icon.png";
 import "./Auth.css";
 import AboutAuth from "./AboutAuth";
+
+import { signup, login } from "../../actions/auth";
+
 const Auth = () => {
   //isSignupPage?? initially false ie we are not on signup
   const [isSignup, setIsSignup] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleSwitch = () => {
     setIsSignup(!isSignup);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!email || !password) {
+      alert("Please enter email and password!");
+    }
+
+    if (isSignup) {
+      // SIGNUP PAGE
+
+      if (!name) {
+        alert("Please enter Username!");
+      }
+      dispatch(signup({ name, email, password }),navigate);
+    } else {
+      // LOGIN PAGE
+
+      dispatch(login({ email, password }),navigate);
+    }
   };
   return (
     <section className="auth-section">
@@ -16,7 +49,7 @@ const Auth = () => {
         {!isSignup && (
           <img src={icon} alt="StackOverflow Icon" className="login-logo" />
         )}
-        <form>
+        <form onSubmit={handleSubmit}>
           {isSignup && (
             <label htmlFor="name">
               <h4>Username:</h4>
@@ -24,8 +57,11 @@ const Auth = () => {
                 type="text"
                 id="name"
                 name="name"
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
                 placeholder="Enter Display Name:"
-                className='input-width'
+                className="input-width"
               />
             </label>
           )}
@@ -36,8 +72,11 @@ const Auth = () => {
             type="email"
             id="email"
             name="email"
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
             placeholder="Enter Email"
-            className='input-width'
+            className="input-width"
           />
           <label htmlFor="password">
             <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -53,8 +92,11 @@ const Auth = () => {
             type="password"
             id="password"
             name="password"
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
             placeholder="Enter Password"
-            className='input-width'
+            className="input-width"
           />
           {isSignup && (
             <p style={{ color: "#666767", fontSize: "13px" }}>
@@ -64,7 +106,7 @@ const Auth = () => {
           )}
 
           {isSignup && (
-            <label htmlFor="check" className='flex1'>
+            <label htmlFor="check" className="flex1">
               <input type="checkbox" id="check" />
               <p style={{ fontSize: "13px" }}>
                 Opt-in to recieve occastional <br /> product updates , user
