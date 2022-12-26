@@ -1,12 +1,11 @@
 import * as api from '../api'
-import { useNavigate } from 'react-router-dom'
+import  setCurrentuser  from './currentUser'
 
 export const signup = (authData, navigate) => async (dispatch) => {
     try {
-        const navigate=useNavigate();
-
         const { data } = await api.signUp(authData)
         dispatch({ type: 'AUTH', data })
+        dispatch(setCurrentuser(JSON.parse(localStorage.getItem('Profile'))))
         navigate('/')
     } catch (err) {
         console.log(err.message);
@@ -17,6 +16,7 @@ export const login = (authData, navigate) => async (dispatch) => {
 
         const { data } = await api.logIn(authData)
         dispatch({ type: 'AUTH', data })
+        dispatch(setCurrentuser(JSON.parse(localStorage.getItem('Profile'))))
         navigate('/')
     } catch (err) {
         console.log(err);

@@ -25,7 +25,7 @@ const Auth = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!email || !password) {
+    if (!email && !password) {
       alert("Please enter email and password!");
     }
 
@@ -35,11 +35,11 @@ const Auth = () => {
       if (!name) {
         alert("Please enter Username!");
       }
-      dispatch(signup({ name, email, password }),navigate);
+      dispatch(signup({ name, email, password },navigate));
     } else {
       // LOGIN PAGE
 
-      dispatch(login({ email, password }),navigate);
+      dispatch(login({ email, password },navigate));
     }
   };
   return (
@@ -124,7 +124,6 @@ const Auth = () => {
             <p style={{ color: "#666767", fontSize: "13px" }}>
               By clicking "Sign up" , you agree to our
               <span style={{ color: "#007ac6" }}>
-                {" "}
                 terms of <br />
                 service
               </span>
