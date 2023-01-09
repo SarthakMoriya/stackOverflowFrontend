@@ -3,8 +3,11 @@ import  setCurrentuser  from './currentUser'
 
 export const signup = (authData, navigate) => async (dispatch) => {
     try {
+        //if failed --> In data we would get message "Email already exists" json format
+        //else data would be user,token,message,etc...
         const { data } = await api.signUp(authData)
         dispatch({ type: 'AUTH', data })
+        //in the above dispatch Profile was created
         dispatch(setCurrentuser(JSON.parse(localStorage.getItem('Profile'))))
         navigate('/')
     } catch (err) {
@@ -16,6 +19,7 @@ export const login = (authData, navigate) => async (dispatch) => {
 
         const { data } = await api.logIn(authData)
         dispatch({ type: 'AUTH', data })
+        //in the above dispatch Profile was created
         dispatch(setCurrentuser(JSON.parse(localStorage.getItem('Profile'))))
         navigate('/')
     } catch (err) {

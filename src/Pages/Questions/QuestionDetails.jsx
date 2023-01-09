@@ -1,134 +1,69 @@
-import React from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import moment from "moment";
+import copy from "copy-to-clipboard";
 
 import voteUp from "../../assets/sort-up.svg";
 import voteDown from "../../assets/sort-down.svg";
-import "./Question.css";
 import Avatar from "../../components/Avatar/Avatar";
+
 import DisplayAnswers from "./DisplayAnswers";
+import { postAnswer ,deleteQuestion} from "../../actions/Question";
+
+import "./Question.css";
 
 const QuetionDetails = () => {
   const { id } = useParams();
+  const questionList = useSelector((state) => state.questionsReducer);
+  const [answer, setAnswer] = useState("");
+  const User = useSelector((state) => state.currentUserReducer);
 
-  const questionList = [
-    {
-      _id: 1,
-      upVotes: 3,
-      userId: 4,
-      downVotes: 4,
-      votes: 3,
-      noOfAnswers: 2,
-      questionTitle: "What is a Function ?",
-      questionBody: "just tell me please...",
-      questionTags: ["java", "c", "c++", "javascript"],
-      userPosted: "Sarthak",
-      askedOn: "jan 1",
-      answer: [
-        {
-          answerBody: "Answer",
-          userAnswered: "Aarsh",
-          answeredOn: "Jan 2",
-          userId: 2,
-        },
-      ],
-    },
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const url = "http://localhost:3000/";
 
-    {
-      _id: 5,
-      upVotes: 3,
-      userId: 4,
-      downVotes: 4,
-      votes: 3,
-      noOfAnswers: 2,
-      questionTitle: "What is a Function ?",
-      questionBody: "just tell me please...",
-      questionTags: ["java", "c", "c++", "javascript"],
-      userPosted: "Sarthak",
-      askedOn: "jan 1",
-      answer: [
-        {
-          answerBody: "Answer",
-          userAnswered: "Aarsh",
-          answeredOn: "Jan 2",
-          userId: 2,
-        },
-      ],
-    },
+  const handlePostAnswer = (e, answerLength) => {
+    e.preventDefault();
 
-    {
-      _id: 2,
-      userId: 4,
-      upVotes: 0,
-      downVotes: 4,
-      votes: 3,
-      noOfAnswers: 2,
-      questionTitle: "What is a Function ?",
-      questionBody: "just tell me please...",
-      questionTags: ["java", "c", "c++", "javascript"],
-      userPosted: "Sarthak",
-      askedOn: "jan 1",
-      answer: [
-        {
-          answerBody: "Answer",
-          userAnswered: "Aarsh",
-          answeredOn: "Jan 2",
-          userId: 2,
-        },
-      ],
-    },
+    if (User === null) {
+      alert("Pleasae Login or Signup to answer a question");
+      navigate("/auth");
+    } else {
+      if (answer === "") {
+        alert("Please enter a answer before submitting!");
+      } else {
+      }
+      dispatch(
+        postAnswer({
+          id,
+          noOfAnswers: answerLength + 1,
+          answerBody: answer,
+          userAnswered: User.user.name,
+          userId:User.user._id
+        })
+      );
+    }
+  };
 
-    {
-      _id: 3,
-      userId: 4,
-      upVotes: 3,
-      downVotes: 4,
-      votes: 3,
-      noOfAnswers: 2,
-      questionTitle: "What is a Function ?",
-      questionBody: "just tell me please...",
-      questionTags: ["java", "c", "c++", "javascript"],
-      userPosted: "Sarthak",
-      askedOn: "jan 1",
-      answer: [
-        {
-          answerBody: "Answer",
-          userAnswered: "Aarsh",
-          answeredOn: "Jan 2",
-          userId: 2,
-        },
-      ],
-    },
+  const handleShare = () => {
+    copy(url + location.pathname);
+    alert("link copied! " + url + location.pathname);
+  };
 
-    {
-      _id: 4,
-      userId: 4,
-      upVotes: 3,
-      downVotes: 4,
-      votes: 3,
-      noOfAnswers: 2,
-      questionTitle: "What is a Function ?",
-      questionBody: "just tell me please...",
-      questionTags: ["java", "c", "c++", "javascript"],
-      userPosted: "Sarthak",
-      askedOn: "jan 1",
-      answer: [
-        {
-          answerBody: "Answer",
-          userAnswered: "Aarsh",
-          answeredOn: "Jan 2",
-          userId: 2,
-        },
-      ],
-    },
-  ];
+  const handleDelete=()=>{
+    dispatch(deleteQuestion(id,navigate))
+  }
+
   return (
     <div className="question-details-page">
-      {questionList === null ? (
+      {questionList.data === null ? (
         <h1>Loading...</h1>
       ) : (
         <>
-          {questionList
-            .filter((question) => JSON.stringify(question._id) === id)
+          {questionList.data
+            .filter((question) => question._id === id)
             .map((question) => (
               <div key={question._id}>
                 <section className="question-details-container">
@@ -158,13 +93,15 @@ const QuetionDetails = () => {
                       </div>
                       <div className="question-actions-user">
                         <div className="">
-                          <button>Share</button>
-                          <button>Delete</button>
+                          <button onClick={handleShare}>Share</button>
+                          {User?.user?._id === question?.userId && (
+                            <button onClick={handleDelete}>Delete</button>
+                          )}
                         </div>
                         <div className="">
-                          <p>AskedOn {question.askedOn}</p>
+                          <p>AskedOn {moment(question.askedOn).fromNow()}</p>
                           <Link
-                            to={`/user/${question.userId}`}
+                            to={`/users/${question.userId}`}
                             className="user-link"
                           >
                             <Avatar backgroundColor="orange" px="8px" py="5px">
@@ -185,8 +122,18 @@ const QuetionDetails = () => {
                 )}
                 <div className="post-ans-container">
                   <h3>Your Answer</h3>
-                  <form action="">
-                    <textarea name="" id="" cols="30" rows="10"></textarea>
+                  <form
+                    onSubmit={(e) => {
+                      handlePostAnswer(e, question.answer.length);
+                    }}
+                  >
+                    <textarea
+                      name=""
+                      id=""
+                      cols="30"
+                      rows="10"
+                      onChange={(e) => setAnswer(e.target.value)}
+                    ></textarea>
                     <input
                       type="submit"
                       className="post-ans-btn"
@@ -218,3 +165,114 @@ const QuetionDetails = () => {
 };
 
 export default QuetionDetails;
+
+//   {
+//     _id: 1,
+//     upVotes: 3,
+//     userId: 4,
+//     downVotes: 4,
+//     votes: 3,
+//     noOfAnswers: 2,
+//     questionTitle: "What is a Function ?",
+//     questionBody: "just tell me please...",
+//     questionTags: ["java", "c", "c++", "javascript"],
+//     userPosted: "Sarthak",
+//     askedOn: "jan 1",
+//     answer: [
+//       {
+//         answerBody: "Answer",
+//         userAnswered: "Aarsh",
+//         answeredOn: "Jan 2",
+//         userId: 2,
+//       },
+//     ],
+//   },
+
+//   {
+//     _id: 5,
+//     upVotes: 3,
+//     userId: 4,
+//     downVotes: 4,
+//     votes: 3,
+//     noOfAnswers: 2,
+//     questionTitle: "What is a Function ?",
+//     questionBody: "just tell me please...",
+//     questionTags: ["java", "c", "c++", "javascript"],
+//     userPosted: "Sarthak",
+//     askedOn: "jan 1",
+//     answer: [
+//       {
+//         answerBody: "Answer",
+//         userAnswered: "Aarsh",
+//         answeredOn: "Jan 2",
+//         userId: 2,
+//       },
+//     ],
+//   },
+
+//   {
+//     _id: 2,
+//     userId: 4,
+//     upVotes: 0,
+//     downVotes: 4,
+//     votes: 3,
+//     noOfAnswers: 2,
+//     questionTitle: "What is a Function ?",
+//     questionBody: "just tell me please...",
+//     questionTags: ["java", "c", "c++", "javascript"],
+//     userPosted: "Sarthak",
+//     askedOn: "jan 1",
+//     answer: [
+//       {
+//         answerBody: "Answer",
+//         userAnswered: "Aarsh",
+//         answeredOn: "Jan 2",
+//         userId: 2,
+//       },
+//     ],
+//   },
+
+//   {
+//     _id: 3,
+//     userId: 4,
+//     upVotes: 3,
+//     downVotes: 4,
+//     votes: 3,
+//     noOfAnswers: 2,
+//     questionTitle: "What is a Function ?",
+//     questionBody: "just tell me please...",
+//     questionTags: ["java", "c", "c++", "javascript"],
+//     userPosted: "Sarthak",
+//     askedOn: "jan 1",
+//     answer: [
+//       {
+//         answerBody: "Answer",
+//         userAnswered: "Aarsh",
+//         answeredOn: "Jan 2",
+//         userId: 2,
+//       },
+//     ],
+//   },
+
+//   {
+//     _id: 4,
+//     userId: 4,
+//     upVotes: 3,
+//     downVotes: 4,
+//     votes: 3,
+//     noOfAnswers: 2,
+//     questionTitle: "What is a Function ?",
+//     questionBody: "just tell me please...",
+//     questionTags: ["java", "c", "c++", "javascript"],
+//     userPosted: "Sarthak",
+//     askedOn: "jan 1",
+//     answer: [
+//       {
+//         answerBody: "Answer",
+//         userAnswered: "Aarsh",
+//         answeredOn: "Jan 2",
+//         userId: 2,
+//       },
+//     ],
+//   },
+// ];

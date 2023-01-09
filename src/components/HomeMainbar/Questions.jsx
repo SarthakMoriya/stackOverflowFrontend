@@ -5,7 +5,7 @@ const Questions = ({ question }) => {
   return (
     <div className="display-question-container">
       <div className="display-votes-ans">
-        <p>{question.votes}</p>
+        <p>{question.upVote-question.downVote}</p>
         <p>votes</p>
       </div>
       <div className="display-votes-ans">
@@ -21,10 +21,11 @@ const Questions = ({ question }) => {
             ))}
           </div>
           <p className="display-time">
-            Asked: {question.askedOn} {question.userPosted}
+            Asked: {question.askedOn.toLocaleString()} {question.userPosted}
           </p>
         </div>
       </div>
+      
     </div>
   );
 };

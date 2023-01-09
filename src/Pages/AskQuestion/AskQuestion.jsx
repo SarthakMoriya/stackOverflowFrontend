@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import askQuestion from "../../actions/askQuestion";
+import { askQuestion } from "../../actions/Question";
 
 import "./AskQuestion.css";
 
@@ -13,7 +13,7 @@ const AskQuestion = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const User = useSelector((state) => (state.currentUserReducer));
+  const User = useSelector((state) => state.currentUserReducer);
   console.log(User);
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,6 +24,7 @@ const AskQuestion = () => {
           questionBody,
           questionTags,
           userPosted: User.user.name,
+          userId:User.user._id
         },
         navigate
       )
@@ -78,7 +79,9 @@ const AskQuestion = () => {
               <p>Add upto 5 tags to describe what your question is about</p>
               <input
                 type="text"
-                onChange={(e) => {setQuestionTags(e.target.value.split(" "))}}
+                onChange={(e) => {
+                  setQuestionTags(e.target.value.split(" "));
+                }}
                 id="ask-ques-tags"
                 placeholder="eg: Html Css Js"
               />
@@ -88,8 +91,7 @@ const AskQuestion = () => {
             type="submit"
             value="Review your Question"
             className="review-btn"
-          >
-          </button>
+          ></button>
         </form>
       </div>
     </div>

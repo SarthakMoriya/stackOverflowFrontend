@@ -5,6 +5,7 @@ import RightSidebar from '../../components/RightSidebar/RightSidebar'
 import HomeMainbar from '../../components/HomeMainbar/HomeMainbar'
 
 const Home = () => {
+  console.log("HELLO")
   return (
     <div className="home-container-1">
       <LeftSidebar />

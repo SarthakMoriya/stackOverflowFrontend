@@ -1,10 +1,44 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import Questions from "./Questions";
-import './HomeMainbar.css'
+import "./HomeMainbar.css";
+import { useSelector } from "react-redux";
+import QuestionList from "./QuestionList";
 
 const HomeMainbar = () => {
-  var questionList = [
+  const questionsList = useSelector((state) => state.questionsReducer);
+  // console.log(questionList.data);
+  const location = useLocation();
+  const user = 1;
+
+  return (
+    <div className="main-bar">
+      <div className="main-bar-header">
+        {location.pathname === "/" ? (
+          <h1>Top Questions</h1>
+        ) : (
+          <h1>All Questions</h1>
+        )}
+        <Link to={user === null ? "/auth" : "/askquestion"} className="ask-btn">
+          Ask Question
+        </Link>
+      </div>
+      <div className="">
+        {questionsList.data === null ? (
+          <h1>Loading...</h1>
+        ) : (
+          <>
+            <p>{questionsList.data.length} questions</p>
+            <QuestionList questionsList={questionsList.data} />
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default HomeMainbar;
+/*
+ var questionList = [
     {
       _id: 1,
       upVotes:3,
@@ -101,35 +135,4 @@ const HomeMainbar = () => {
     },
    
   ];
-  const location = useLocation();
-  const user=1;
-
-  return (
-    <div className="main-bar">
-      <div className="main-bar-header">
-        {location.pathname === "/" ? (
-          <h1>Top Questions</h1>
-        ) : (
-          <h1>All Questions</h1>
-        )}
-        <Link to={user === null  ?'/auth':"/askquestion"} className="ask-btn">Ask Question</Link>
-      </div>
-      <div className="">
-        {questionList === null ? (
-          <h1>Loading...</h1>
-        ) : (
-          <>
-            <p>{questionList.length}</p>
-            <>
-              {questionList.map((question) => (
-                <Questions question={question} key={question.id}/>
-              ))}
-            </>
-          </>
-        )}
-      </div>
-    </div>
-  );
-};
-
-export default HomeMainbar;
+*/

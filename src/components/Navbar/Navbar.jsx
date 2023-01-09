@@ -13,9 +13,9 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.currentUserReducer);
 
-  useEffect(()=>{
-    dispatch(setCurrentUser(JSON.parse(localStorage.getItem('Profile'))))
-  },[dispatch])
+  useEffect(() => {
+    dispatch(setCurrentUser(JSON.parse(localStorage.getItem("Profile"))));
+  }, [dispatch]);
   return (
     <nav className="main-nav">
       <div className="navbar">
@@ -46,7 +46,10 @@ const Navbar = () => {
           </Link>
         ) : (
           <>
-            <Link to="/" style={{ textDecoration: "none" }}>
+            <Link
+              to={`/users/${user.user._id}`}
+              style={{ textDecoration: "none" }}
+            >
               <Avatar
                 backgroundColor="#009dff"
                 px="10px"
@@ -57,7 +60,9 @@ const Navbar = () => {
                 {user.user.name[0]}
               </Avatar>
             </Link>
-            <button className="nav-link nav-item">{user===null?'Log in':'Log out'}</button>
+            <button className="nav-link nav-item">
+              {user === null ? "Log in" : "Log out"}
+            </button>
           </>
         )}
       </div>
