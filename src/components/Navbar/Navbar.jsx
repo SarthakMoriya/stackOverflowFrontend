@@ -1,5 +1,6 @@
+import decode from 'jwt-decode';
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import logo from "../../assets/logo.png";
 import searchIcon from "../../assets/magnifying-glass-solid.svg";
@@ -12,8 +13,22 @@ import "./Navbar.css";
 const Navbar = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.currentUserReducer);
+  const navigate=useNavigate();
+
+  const handleLogout=()=>{
+    dispatch({type:"LOGOUT"})
+    navigate('/')
+    dispatch(setCurrentUser(null))
+  }
 
   useEffect(() => {
+    const token=user?.token;
+    if(token){
+      const decodedToken=decode(token);
+      if(decodedToken.exp * 1000 <new Date().getTime()){
+        handleLogout();
+      }
+    }
     dispatch(setCurrentUser(JSON.parse(localStorage.getItem("Profile"))));
   }, [dispatch]);
   return (
@@ -60,7 +75,7 @@ const Navbar = () => {
                 {user.user.name[0]}
               </Avatar>
             </Link>
-            <button className="nav-link nav-item">
+            <button className="nav-link nav-item" onClick={handleLogout}>
               {user === null ? "Log in" : "Log out"}
             </button>
           </>
