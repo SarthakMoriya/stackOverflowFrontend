@@ -6,7 +6,6 @@ import QuestionList from "./QuestionList";
 
 const HomeMainbar = () => {
   const questionsList = useSelector((state) => state.questionsReducer);
-  // console.log(questionList.data);
   const location = useLocation();
   const user = 1;
 
@@ -22,7 +21,7 @@ const HomeMainbar = () => {
           Ask Question
         </Link>
       </div>
-      <div className="">
+      <div className="question-main-container">
         {questionsList.data === null ? (
           <h1>Loading...</h1>
         ) : (

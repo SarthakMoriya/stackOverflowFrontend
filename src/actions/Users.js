@@ -19,3 +19,40 @@ export const updateProfile = (id, updateData) => async (dispatch) => {
         console.log(error)
     }
 }
+
+export const addFriendOp = (userId, friendId) => async (dispatch) => {
+    try {
+        const { data } = await api.addFriend(userId, friendId)
+        console.log(data)
+        dispatch(fetchAllUsers())
+    } catch (error) {
+        console.log(error)
+    }
+}
+export const removeFriendOp = (userId, friendId) => async (dispatch) => {
+    try {
+        const { data } = await api.removeFriend(userId, friendId)
+        console.log(data)
+        dispatch(fetchAllUsers())
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const setNewSubscription = (userId, type) => async (dispatch) => {
+    try {
+        const { data } = await api.setSubscription(userId, type)
+        console.log(data);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const setQuestionsLeft = (userId, quesLeft) => async (dispatch) => {
+    try {
+        const { data } = await api.updateQuestionsLeft(userId, quesLeft);
+        console.log(data)
+    } catch (error) {
+        console.log(error);
+    }
+}

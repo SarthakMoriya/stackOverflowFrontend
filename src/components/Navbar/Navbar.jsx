@@ -1,4 +1,4 @@
-import decode from 'jwt-decode';
+import decode from "jwt-decode";
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,19 +13,19 @@ import "./Navbar.css";
 const Navbar = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.currentUserReducer);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
-  const handleLogout=()=>{
-    dispatch({type:"LOGOUT"})
-    navigate('/')
-    dispatch(setCurrentUser(null))
-  }
+  const handleLogout = () => {
+    dispatch({ type: "LOGOUT" });
+    navigate("/");
+    dispatch(setCurrentUser(null));
+  };
 
   useEffect(() => {
-    const token=user?.token;
-    if(token){
-      const decodedToken=decode(token);
-      if(decodedToken.exp * 1000 <new Date().getTime()){
+    const token = user?.token;
+    if (token) {
+      const decodedToken = decode(token);
+      if (decodedToken.exp * 1000 < new Date().getTime()) {
         handleLogout();
       }
     }
@@ -43,8 +43,8 @@ const Navbar = () => {
         <Link to="/contact" className="nav-item nav-btn">
           Contact
         </Link>
-        <Link to="/teams" className="nav-item nav-btn">
-          For Teams
+        <Link to="/payment" className="nav-item nav-btn">
+          Payment
         </Link>
         <form>
           <input type="text" className="" placeholder="Search..." />
@@ -80,6 +80,13 @@ const Navbar = () => {
             </button>
           </>
         )}
+      </div> 
+      <div className="sub-nav">
+        <Link to='/'>Home</Link>
+        <Link to='/questions'>Questions</Link>
+        <Link to='/tags'>Tags</Link>
+        <Link to='/users'>Users</Link>
+        <Link to='/posts'>Community</Link>
       </div>
     </nav>
   );

@@ -22,7 +22,7 @@ const QuetionDetails = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  const url = "http://localhost:3000/";
+  const url = "https://stackoverflowbysarthak.netlify.app";
 
   const handlePostAnswer = (e, answerLength) => {
     e.preventDefault();
@@ -34,16 +34,16 @@ const QuetionDetails = () => {
       if (answer === "") {
         alert("Please enter a answer before submitting!");
       } else {
-      }
-      dispatch(
-        postAnswer({
-          id,
-          noOfAnswers: answerLength + 1,
-          answerBody: answer,
-          userAnswered: User.user.name,
-          userId:User.user._id
-        })
-      );
+        dispatch(
+          postAnswer({
+            id,
+            noOfAnswers: answerLength + 1,
+            answerBody: answer,
+            userAnswered: User.user.name,
+            userId:User.user._id
+          })
+          );
+        }
     }
   };
 
@@ -175,113 +175,3 @@ const QuetionDetails = () => {
 
 export default QuetionDetails;
 
-//   {
-//     _id: 1,
-//     upVotes: 3,
-//     userId: 4,
-//     downVotes: 4,
-//     votes: 3,
-//     noOfAnswers: 2,
-//     questionTitle: "What is a Function ?",
-//     questionBody: "just tell me please...",
-//     questionTags: ["java", "c", "c++", "javascript"],
-//     userPosted: "Sarthak",
-//     askedOn: "jan 1",
-//     answer: [
-//       {
-//         answerBody: "Answer",
-//         userAnswered: "Aarsh",
-//         answeredOn: "Jan 2",
-//         userId: 2,
-//       },
-//     ],
-//   },
-
-//   {
-//     _id: 5,
-//     upVotes: 3,
-//     userId: 4,
-//     downVotes: 4,
-//     votes: 3,
-//     noOfAnswers: 2,
-//     questionTitle: "What is a Function ?",
-//     questionBody: "just tell me please...",
-//     questionTags: ["java", "c", "c++", "javascript"],
-//     userPosted: "Sarthak",
-//     askedOn: "jan 1",
-//     answer: [
-//       {
-//         answerBody: "Answer",
-//         userAnswered: "Aarsh",
-//         answeredOn: "Jan 2",
-//         userId: 2,
-//       },
-//     ],
-//   },
-
-//   {
-//     _id: 2,
-//     userId: 4,
-//     upVotes: 0,
-//     downVotes: 4,
-//     votes: 3,
-//     noOfAnswers: 2,
-//     questionTitle: "What is a Function ?",
-//     questionBody: "just tell me please...",
-//     questionTags: ["java", "c", "c++", "javascript"],
-//     userPosted: "Sarthak",
-//     askedOn: "jan 1",
-//     answer: [
-//       {
-//         answerBody: "Answer",
-//         userAnswered: "Aarsh",
-//         answeredOn: "Jan 2",
-//         userId: 2,
-//       },
-//     ],
-//   },
-
-//   {
-//     _id: 3,
-//     userId: 4,
-//     upVotes: 3,
-//     downVotes: 4,
-//     votes: 3,
-//     noOfAnswers: 2,
-//     questionTitle: "What is a Function ?",
-//     questionBody: "just tell me please...",
-//     questionTags: ["java", "c", "c++", "javascript"],
-//     userPosted: "Sarthak",
-//     askedOn: "jan 1",
-//     answer: [
-//       {
-//         answerBody: "Answer",
-//         userAnswered: "Aarsh",
-//         answeredOn: "Jan 2",
-//         userId: 2,
-//       },
-//     ],
-//   },
-
-//   {
-//     _id: 4,
-//     userId: 4,
-//     upVotes: 3,
-//     downVotes: 4,
-//     votes: 3,
-//     noOfAnswers: 2,
-//     questionTitle: "What is a Function ?",
-//     questionBody: "just tell me please...",
-//     questionTags: ["java", "c", "c++", "javascript"],
-//     userPosted: "Sarthak",
-//     askedOn: "jan 1",
-//     answer: [
-//       {
-//         answerBody: "Answer",
-//         userAnswered: "Aarsh",
-//         answeredOn: "Jan 2",
-//         userId: 2,
-//       },
-//     ],
-//   },
-// ];

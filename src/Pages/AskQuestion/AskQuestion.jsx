@@ -1,22 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { askQuestion } from "../../actions/Question";
+import { setQuestionsLeft } from "../../actions/Users";
 
 import "./AskQuestion.css";
 
 const AskQuestion = () => {
-  const [questionTitle, setQuestionTitle] = useState("");
-  const [questionBody, setQuestionBody] = useState("");
-  const [questionTags, setQuestionTags] = useState([]);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const User = useSelector((state) => state.currentUserReducer);
-  console.log(User);
+
+  const [questionTitle, setQuestionTitle] = useState("");
+  const [questionBody, setQuestionBody] = useState("");
+  const [questionTags, setQuestionTags] = useState([]);
+  const [quesLeft, setQuesLeft] = useState(() => {
+    return localStorage.getItem("quesLeft");
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (quesLeft <= 0) {
+      alert(
+        "Maximum number of questions already asked! \n Please Upgrade your plan"
+      );
+      navigate("/payment");
+      return;
+    }
     dispatch(
       askQuestion(
         {
@@ -24,11 +35,13 @@ const AskQuestion = () => {
           questionBody,
           questionTags,
           userPosted: User.user.name,
-          userId:User.user._id
+          userId: User.user._id,
         },
         navigate
       )
     );
+    dispatch(setQuestionsLeft(User?.user?._id, quesLeft-1));
+    localStorage.setItem("quesLeft", parseInt(quesLeft) - 1);
   };
 
   const handleEnter = (e) => {
@@ -36,10 +49,16 @@ const AskQuestion = () => {
       setQuestionBody(questionBody + "\n");
     }
   };
+
+  // useEffect(() => {
+  //   localStorage.setItem("quesLeft", quesLeft);
+  // }, [])
+
   return (
     <div className="ask-question">
       <div className="ask-ques-container">
         <h1>Ask Public Question</h1>
+        <h4>{quesLeft} Questions Left</h4>
         <form onSubmit={handleSubmit}>
           <div className="ask-form-container">
             <label htmlFor="ask-ques-title">
@@ -91,7 +110,9 @@ const AskQuestion = () => {
             type="submit"
             value="Review your Question"
             className="review-btn"
-          ></button>
+          >
+            Post
+          </button>
         </form>
       </div>
     </div>
